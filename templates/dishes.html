@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1>Dishes </h1>
+        <ul class="fa-list-ul">
+            {% for dish in Dishes %}
+                <li class="list-group-item"><a href="dish/{{ dish.id }}">{{ dish.title }}</a></li>
+            {% endfor %}
+        </ul>
+        </div>
+{% endblock %}

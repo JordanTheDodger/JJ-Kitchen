@@ -4,11 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "Don't tell anyone"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1033@localhost/learning'
-
 db = SQLAlchemy(app)
 
 Dishes = Dishes()
@@ -48,13 +46,14 @@ class RegisterForm(Form):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
+    # Using WtForms for registration
     if request.method == 'POST' and form.validate():
         name = form.name.data
         email = form.email.data
         username = form.email.data
         password = sha256_crypt.encrypt(str(form.password.data))
 
-        # Create db
+        # Create db, execute query
         db.create_all()
         usr = Flask_Users(None, name, email, username, password)
         db.session.add(usr)
@@ -63,14 +62,39 @@ def register():
         db.session.commit()
 
         flash('You are now registered', 'success')
-        redirect(url_for('home'))
+        return redirect(url_for('login'))
 
-    return render_template('register.html', form=form)
+    return render_template("register.html", form=form)
+
+
+@app.route('/login', methods=['GET,''POST'])
+def login():
+    if request.method == 'POST':
+        # get form fields
+        username = request.form['username']
+        password_candidate = request.form['password']
+
+        # getting user
+        login_user = Flask_Users.query.all(username=username.first())
+
+        if login_user:
+            # Get stored hash
+            password = login_user.password
+            # Compare passwords
+            if sha256_crypt.verify(password_candidate, password):
+                app.logger.info('PASSWORD MATCHED')
+            else:
+                app.logger.info('PASSWORD MATCHED')
+
+        else:
+            app.logger.info('NO USER FOUND')
+
+    return render_template('login.html')
+
 
 # Calling the database
 class Flask_Users(db.Model):
-
-    __tablename__= "flask_users"
+    __tablename__ = "flask_users"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -78,7 +102,7 @@ class Flask_Users(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
-    def __init__(self,id,name,email,username,password):
+    def __init__(self, id, name, email, username, password):
         self.id = id
         self.name = name
         self.email = email
@@ -87,5 +111,6 @@ class Flask_Users(db.Model):
 
     def __repr__(self):
         return f'Username:- {self.username}\n Email:- {self.email}\n Password:- {self.password}'
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=4995, debug=True)

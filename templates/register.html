@@ -1,8 +1,7 @@
 {% extends 'layout.html' %}
 
-
 {% block body %}
-    <div class="container">
+    <div class="box">
   <h1>Register </h1>
     {% from "includes/_formhelpers.html" import render_field %}
     <form method="POST" action="">
@@ -13,7 +12,13 @@
         {{ render_field(form.email, class="form-control") }}
     </div>
     <div clas="form-group">
-        {{ render_field(form.username, class="form-control") }}
+        {{ render_field(form.username, class="form-control", placeholder="Take your best at making Funniest Username") }}
+    </div>
+    <div clas="form-group">
+        {{ render_field(form.address, class="form-control", placeholder="Please enter full Address") }}
+    </div>
+    <div clas="form-group">
+        {{ render_field(form.contact, class="form-control") }}
     </div>
     <div clas="form-group">
         {{ render_field(form.password, class="form-control") }}

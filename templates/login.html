@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <h1>Login</h1>
-    {% include 'includes/_messages.html' %}
-  <form action="" method="POST">
+    <h1>Login</h1>
+   {% include 'includes/_messages.html' %}
+   <form action="" method="POST" novalidate>
     <div class="form-group">
       <label>Username</label>
       <input type="text" name="username" class="form-control" value={{request.form.username}}>

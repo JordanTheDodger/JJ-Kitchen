@@ -1,4 +1,4 @@
 # JJ-Kitchen
 
-It is Flask-PostgreSQL web App that is a Work in Progress
+It is Flask-PostgreSQL Web-App 
 Happy Coding!
